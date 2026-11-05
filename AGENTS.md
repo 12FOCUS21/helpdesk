@@ -23,7 +23,8 @@ Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo
 - `npm run db:seed`: carga los datos de prueba
 - `npm run db:studio`: abre Prisma Studio
 - `npm run db:reset`: reinicia la base de datos y la vuelve a sembrar
-- `npm test`: pruebas (se añadirá en la semana 3)
+- `npm test`: ejecuta las pruebas una vez
+- `npm run test:watch`: ejecuta las pruebas en modo vigilancia
 
 ## Convenciones de código
 
@@ -32,6 +33,7 @@ Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo
 - Funciones y variables en camelCase.
 - Rutas y carpetas en minúsculas y kebab-case.
 - Validar toda entrada del usuario con Zod.
+- La lógica de negocio vive en `src/lib/tickets`; las rutas y componentes solo la orquestan.
 - No añadir comentarios salvo que aporten información que el código no exprese.
 - Mantener las funciones pequeñas y con una sola responsabilidad.
 
@@ -42,6 +44,14 @@ Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo
 - No editar migraciones ya aplicadas; crear una nueva.
 - El archivo `prisma/dev.db` y el cliente generado no se versionan.
 - Los estados y prioridades usan los enums `TicketStatus` y `TicketPriority`.
+
+## Pruebas
+
+- Las pruebas viven junto al código con el sufijo `.test.ts`.
+- `npm test` usa `prisma/test.db`; nunca ejecutar pruebas contra `prisma/dev.db`.
+- Probar la lógica de negocio y la validación; no probar detalles de implementación de Prisma.
+- Toda regla de negocio nueva debe incluir al menos una prueba.
+- Las pruebas deben ejecutarse antes de cada commit.
 
 ## Flujo de trabajo con IA
 
