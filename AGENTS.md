@@ -36,6 +36,8 @@ Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo
 - La lógica de negocio vive en `src/lib/tickets`; las rutas y componentes solo la orquestan.
 - Las Server Actions viven en `src/lib/*/actions.ts`, se marcan con `"use server"` y validan la sesión con `requireUser()`.
 - Las rutas protegidas viven bajo `src/app/(app)` y su layout comprueba la sesión con `requireUser()`.
+- Usar `notFound()` para recursos inexistentes y `error.tsx` para errores inesperados.
+- Convertir los errores de validación de Server Actions con `actionStateFromError`.
 - No añadir comentarios salvo que aporten información que el código no exprese.
 - Mantener las funciones pequeñas y con una sola responsabilidad.
 

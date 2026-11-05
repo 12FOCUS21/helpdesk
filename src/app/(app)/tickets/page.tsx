@@ -1,16 +1,30 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import {
   PriorityBadge,
   StatusBadge,
 } from "@/components/tickets/TicketBadges";
 import { TicketFilters } from "@/components/tickets/TicketFilters";
+import { TicketListSkeleton } from "@/components/tickets/TicketListSkeleton";
 import { requireUser } from "@/lib/auth/current-user";
 import { formatDate } from "@/lib/format";
 import { listTickets } from "@/lib/tickets/service";
 import { ticketFilterSchema } from "@/lib/validation";
 
+export const metadata: Metadata = {
+  title: "Tickets — HelpDesk",
+};
+
 type TicketsPageProps = {
   searchParams: Promise<{ status?: string; q?: string }>;
+};
+
+type TicketListProps = {
+  filters: {
+    status?: "abierto" | "en_progreso" | "cerrado";
+    search?: string;
+  };
 };
 
 export default async function TicketsPage({ searchParams }: TicketsPageProps) {
@@ -21,8 +35,6 @@ export default async function TicketsPage({ searchParams }: TicketsPageProps) {
     search: query.q,
   });
   const filters = parsedFilters.success ? parsedFilters.data : {};
-  const hasFilters = Boolean(filters.status || filters.search);
-  const tickets = await listTickets(filters);
 
   return (
     <div className="space-y-6">
@@ -32,8 +44,7 @@ export default async function TicketsPage({ searchParams }: TicketsPageProps) {
             Tickets
           </h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            {tickets.length} {tickets.length === 1 ? "ticket" : "tickets"}{" "}
-            {hasFilters ? "con los filtros actuales" : "en el sistema"}
+            Gestiona las incidencias del equipo.
           </p>
         </div>
         <Link
@@ -45,6 +56,27 @@ export default async function TicketsPage({ searchParams }: TicketsPageProps) {
       </div>
 
       <TicketFilters status={filters.status} q={filters.search} />
+
+      <Suspense
+        key={`${filters.status ?? "todos"}-${filters.search ?? ""}`}
+        fallback={<TicketListSkeleton />}
+      >
+        <TicketList filters={filters} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function TicketList({ filters }: TicketListProps) {
+  const tickets = await listTickets(filters);
+  const hasFilters = Boolean(filters.status || filters.search);
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        {tickets.length} {tickets.length === 1 ? "ticket" : "tickets"}{" "}
+        {hasFilters ? "con los filtros actuales" : "en el sistema"}
+      </p>
 
       {tickets.length === 0 ? (
         <div className="rounded-xl border border-dashed border-zinc-300 bg-white p-10 text-center dark:border-zinc-700 dark:bg-zinc-950">

@@ -3,6 +3,7 @@ import {
   createCommentSchema,
   createTicketSchema,
   loginSchema,
+  registerSchema,
   ticketFilterSchema,
   updateTicketSchema,
 } from "./validation";
@@ -146,6 +147,42 @@ describe("loginSchema", () => {
     const result = loginSchema.safeParse({
       email: "agente@helpdesk.dev",
       password: "corta",
+    });
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("registerSchema", () => {
+  it("normaliza el nombre y el correo", () => {
+    const result = registerSchema.parse({
+      name: "  Ana Torres  ",
+      email: "  ANA@HELPDESK.DEV ",
+      password: "password123",
+      confirmPassword: "password123",
+    });
+
+    expect(result.name).toBe("Ana Torres");
+    expect(result.email).toBe("ana@helpdesk.dev");
+  });
+
+  it("rechaza contraseñas que no coinciden", () => {
+    const result = registerSchema.safeParse({
+      name: "Ana Torres",
+      email: "ana@helpdesk.dev",
+      password: "password123",
+      confirmPassword: "password124",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rechaza un nombre demasiado corto", () => {
+    const result = registerSchema.safeParse({
+      name: "A",
+      email: "ana@helpdesk.dev",
+      password: "password123",
+      confirmPassword: "password123",
     });
 
     expect(result.success).toBe(false);

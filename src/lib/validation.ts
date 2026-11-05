@@ -61,17 +61,40 @@ export const ticketFilterSchema = z.object({
     .optional(),
 });
 
+const emailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.email("Introduce un correo electrónico válido"));
+
+const passwordSchema = z
+  .string()
+  .min(8, "La contraseña debe tener al menos 8 caracteres")
+  .max(100, "La contraseña no puede superar los 100 caracteres");
+
 export const loginSchema = z.object({
-  email: z
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export const accountSchema = z.object({
+  name: z
     .string()
     .trim()
-    .toLowerCase()
-    .pipe(z.email("Introduce un correo electrónico válido")),
-  password: z
-    .string()
-    .min(8, "La contraseña debe tener al menos 8 caracteres")
-    .max(100, "La contraseña no puede superar los 100 caracteres"),
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(80, "El nombre no puede superar los 80 caracteres"),
+  email: emailSchema,
+  password: passwordSchema,
 });
+
+export const registerSchema = accountSchema
+  .extend({
+    confirmPassword: z.string().min(1, "Confirma la contraseña"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
 
 export type CreateTicketInput = z.input<typeof createTicketSchema>;
 export type UpdateTicketInput = z.input<typeof updateTicketSchema>;
@@ -79,3 +102,4 @@ export type CreateCommentInput = z.input<typeof createCommentSchema>;
 export type ChangeTicketStatusInput = z.input<typeof changeTicketStatusSchema>;
 export type TicketFilterInput = z.input<typeof ticketFilterSchema>;
 export type LoginInput = z.input<typeof loginSchema>;
+export type RegisterInput = z.input<typeof registerSchema>;

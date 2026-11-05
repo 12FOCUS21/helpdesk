@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteTicketForm } from "@/components/tickets/DeleteTicketForm";
@@ -11,6 +12,10 @@ import { formatDate } from "@/lib/format";
 import { addCommentAction, changeStatusAction } from "@/lib/tickets/actions";
 import { canTransition } from "@/lib/tickets/status";
 import { getTicket, TicketNotFoundError } from "@/lib/tickets/service";
+
+export const metadata: Metadata = {
+  title: "Detalle del ticket — HelpDesk",
+};
 
 type TicketDetailPageProps = {
   params: Promise<{ id: string }>;

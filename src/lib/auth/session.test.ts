@@ -5,7 +5,9 @@ import {
   authenticate,
   createSession,
   deleteSession,
+  EmailInUseError,
   findSessionUser,
+  registerUser,
 } from "./session";
 
 const password = "password123";
@@ -30,6 +32,50 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await prisma.$disconnect();
+});
+
+describe("registerUser", () => {
+  it("crea un usuario y guarda la contraseña hasheada", async () => {
+    const user = await registerUser({
+      name: "  Ana Torres  ",
+      email: "  ANA@EXAMPLE.COM  ",
+      password: "password123",
+    });
+
+    expect(user.name).toBe("Ana Torres");
+    expect(user.email).toBe("ana@example.com");
+
+    const stored = await prisma.user.findUnique({
+      where: { email: "ana@example.com" },
+    });
+
+    expect(stored?.passwordHash).not.toBe("password123");
+    expect(await bcrypt.compare("password123", stored!.passwordHash)).toBe(
+      true,
+    );
+  });
+
+  it("rechaza un correo ya registrado", async () => {
+    await registerUser({
+      name: "Ana",
+      email: "ana@example.com",
+      password: "password123",
+    });
+
+    await expect(
+      registerUser({
+        name: "Otra persona",
+        email: "ANA@example.com",
+        password: "password123",
+      }),
+    ).rejects.toBeInstanceOf(EmailInUseError);
+  });
+
+  it("valida los datos de la cuenta", async () => {
+    await expect(
+      registerUser({ name: "A", email: "no-es-correo", password: "corta" }),
+    ).rejects.toThrow();
+  });
 });
 
 describe("authenticate", () => {

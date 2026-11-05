@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/current-user";
 import { TICKET_PRIORITIES, TICKET_STATUSES } from "@/lib/tickets/constants";
@@ -6,6 +7,10 @@ import {
   TICKET_STATUS_LABELS,
 } from "@/lib/tickets/labels";
 import { getTicketStats } from "@/lib/tickets/stats";
+
+export const metadata: Metadata = {
+  title: "Panel — HelpDesk",
+};
 
 export default async function DashboardPage() {
   await requireUser();

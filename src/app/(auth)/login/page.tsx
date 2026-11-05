@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { LoginForm } from "./login-form";
+
+export const metadata: Metadata = {
+  title: "Iniciar sesión — HelpDesk",
+};
 
 export default async function LoginPage() {
   const user = await getCurrentUser();
@@ -25,6 +31,15 @@ export default async function LoginPage() {
 
       <div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
         <LoginForm />
+        <p className="mt-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          ¿No tienes cuenta?{" "}
+          <Link
+            href="/register"
+            className="font-medium text-zinc-900 hover:underline dark:text-zinc-100"
+          >
+            Crear una
+          </Link>
+        </p>
       </div>
 
       {process.env.NODE_ENV !== "production" ? (

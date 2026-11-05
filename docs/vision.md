@@ -23,8 +23,8 @@ Construir una aplicación web que permita a usuarios autenticados crear tickets,
 - Comentarios en cada ticket.
 - Estados: `abierto`, `en_progreso`, `cerrado`.
 - Prioridades: `baja`, `media`, `alta`.
-- Filtros por estado y búsqueda por título.
-- Panel con cantidad de tickets por estado.
+- Filtros por estado y búsqueda por título o descripción.
+- Panel con cantidad de tickets por estado y prioridad.
 - Pruebas de las reglas de negocio principales.
 
 ### Excluido (v2)
@@ -36,12 +36,21 @@ Construir una aplicación web que permita a usuarios autenticados crear tickets,
 
 ## Historias de usuario y criterios de aceptación
 
+### HU-0: Registrarse
+
+**Como** solicitante **quiero** crear una cuenta **para** registrar mis incidencias.
+
+- El nombre debe tener entre 2 y 80 caracteres.
+- El correo debe ser válido y no estar registrado.
+- La contraseña debe tener al menos 8 caracteres y coincidir con su confirmación.
+- Al registrarse, la sesión se inicia automáticamente.
+
 ### HU-1: Crear ticket
 
 **Como** solicitante **quiero** crear un ticket **para** reportar un problema.
 
 - El formulario exige título (3-100 caracteres) y descripción (10-2000 caracteres).
-- Al guardar, el ticket queda en estado `abierto` con prioridad `media`.
+- Al guardar, el ticket queda en estado `abierto` con prioridad `media` por defecto, modificable en el formulario.
 - Si la validación falla, se muestra el error y no se guarda nada.
 
 ### HU-2: Listar tickets
@@ -79,6 +88,7 @@ Construir una aplicación web que permita a usuarios autenticados crear tickets,
 ## Modelo conceptual
 
 - **User**: id, name, email, passwordHash, createdAt.
+- **Session**: id, tokenHash, userId, expiresAt, createdAt.
 - **Ticket**: id, title, description, status, priority, authorId, assigneeId, createdAt, updatedAt.
 - **Comment**: id, ticketId, authorId, body, createdAt.
 

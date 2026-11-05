@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { accountSchema } from "@/lib/validation";
 
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -12,6 +13,37 @@ export type SessionUser = {
 
 function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
+}
+
+export class EmailInUseError extends Error {
+  constructor(email: string) {
+    super(`Ya existe una cuenta con el correo ${email}`);
+    this.name = "EmailInUseError";
+  }
+}
+
+export async function registerUser(input: unknown) {
+  const data = accountSchema.parse(input);
+
+  const existing = await prisma.user.findUnique({
+    where: { email: data.email },
+    select: { id: true },
+  });
+
+  if (existing) {
+    throw new EmailInUseError(data.email);
+  }
+
+  const passwordHash = await bcrypt.hash(data.password, 10);
+
+  return prisma.user.create({
+    data: {
+      name: data.name,
+      email: data.email,
+      passwordHash,
+    },
+    select: { id: true, name: true, email: true },
+  });
 }
 
 export async function authenticate(email: string, password: string) {

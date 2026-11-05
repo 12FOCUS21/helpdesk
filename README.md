@@ -4,7 +4,7 @@ Sistema de tickets de soporte desarrollado como proyecto de aprendizaje de ingen
 
 ## Estado
 
-Semana 6 completada: panel con métricas, filtro por estado y búsqueda de tickets.
+Semana 7 completada: registro de usuarios, manejo de errores, página 404 y pruebas adicionales.
 
 ## Stack
 
@@ -64,13 +64,14 @@ Todas las cuentas usan la contraseña `password123`.
 
 ## Autenticación
 
-El acceso requiere iniciar sesión en `/login`. Las sesiones se guardan en la tabla `sessions` como un hash SHA-256 del token; la cookie `helpdesk_session` es `httpOnly`, `SameSite=Lax`, dura 7 días y las rutas bajo `(app)` están protegidas con `requireUser()`.
+El acceso requiere iniciar sesión en `/login` o crear una cuenta en `/register`. Las sesiones se guardan en la tabla `sessions` como un hash SHA-256 del token; la cookie `helpdesk_session` es `httpOnly`, `SameSite=Lax`, dura 7 días y las rutas bajo `(app)` están protegidas con `requireUser()`. Al registrarse, la sesión se inicia automáticamente.
 
 ## Rutas
 
 | Ruta | Descripción |
 | --- | --- |
 | `/login` | Inicio de sesión |
+| `/register` | Crear una cuenta |
 | `/dashboard` | Panel con métricas |
 | `/tickets` | Lista de tickets con filtros |
 | `/tickets/new` | Crear un ticket |
@@ -92,10 +93,13 @@ helpdesk/
 ├── src/
 │   ├── app/
 │   │   ├── (app)/           # Rutas protegidas
-│   │   └── (auth)/          # Inicio de sesión
+│   │   ├── (auth)/          # Inicio de sesión y registro
+│   │   ├── error.tsx        # Error boundary raíz
+│   │   └── not-found.tsx    # Página 404 global
 │   ├── components/          # Componentes de interfaz
 │   ├── generated/           # Cliente de Prisma generado (no se versiona)
 │   └── lib/
+│       ├── action-state.ts  # Errores de Server Actions
 │       ├── auth/            # Sesiones, cookies y guardas
 │       ├── prisma.ts        # Instancia única de Prisma Client
 │       ├── validation.ts    # Esquemas de Zod
@@ -110,13 +114,19 @@ helpdesk/
 └── README.md
 ```
 
+## Manejo de errores
+
+- `error.tsx` captura errores inesperados y ofrece reintentar o volver al panel.
+- `not-found.tsx` muestra la página 404 global; el detalle de un ticket inexistente usa su propio `not-found.tsx` con estado HTTP 404.
+- Las Server Actions devuelven errores de validación por campo mediante `actionStateFromError` y muestran mensajes al usuario.
+
 ## Base de datos
 
 La base de datos es un archivo SQLite en `prisma/dev.db` que no se versiona. Las migraciones sí se versionan en `prisma/migrations`. Para cambiar el modelo, edita `prisma/schema.prisma` y ejecuta `npm run db:migrate`.
 
 ## Pruebas
 
-`npm test` usa una base de datos independiente en `prisma/test.db`, aplica las migraciones y limpia los datos antes de cada prueba. Los archivos de prueba se ejecutan en serie porque comparten esa base SQLite. Incluye pruebas unitarias de validación y de la máquina de estados, pruebas de integración de la lógica de negocio, pruebas de autenticación y sesiones, y pruebas de las métricas.
+`npm test` usa una base de datos independiente en `prisma/test.db`, aplica las migraciones y limpia los datos antes de cada prueba. Los archivos de prueba se ejecutan en serie porque comparten esa base SQLite. Incluye pruebas unitarias de validación y de la máquina de estados, pruebas de integración de la lógica de negocio, pruebas de autenticación, registro y sesiones, pruebas de las métricas y pruebas de la conversión de errores de Server Actions.
 
 ## Documentación
 

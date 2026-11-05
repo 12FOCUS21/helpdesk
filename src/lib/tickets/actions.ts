@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { ZodError } from "zod";
+import { actionStateFromError } from "@/lib/action-state";
 import { requireUser } from "@/lib/auth/current-user";
 import type { ActionState } from "@/lib/form-state";
 import {
@@ -15,21 +15,6 @@ import {
 
 function readField(formData: FormData, key: string) {
   return String(formData.get(key) ?? "");
-}
-
-function toActionState(error: unknown): ActionState {
-  if (error instanceof ZodError) {
-    const fieldErrors: Record<string, string[]> = {};
-
-    for (const issue of error.issues) {
-      const key = issue.path.map(String).join(".") || "form";
-      (fieldErrors[key] ??= []).push(issue.message);
-    }
-
-    return { fieldErrors };
-  }
-
-  return { error: "No se pudo completar la acción" };
 }
 
 export async function createTicketAction(
@@ -49,7 +34,7 @@ export async function createTicketAction(
 
     ticketId = ticket.id;
   } catch (error) {
-    return toActionState(error);
+    return actionStateFromError(error);
   }
 
   revalidatePath("/tickets");
@@ -70,7 +55,7 @@ export async function updateTicketAction(
       priority: readField(formData, "priority"),
     });
   } catch (error) {
-    return toActionState(error);
+    return actionStateFromError(error);
   }
 
   revalidatePath("/tickets");

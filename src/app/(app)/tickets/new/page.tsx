@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { TicketForm } from "@/components/tickets/TicketForm";
 import { requireUser } from "@/lib/auth/current-user";
 import { createTicketAction } from "@/lib/tickets/actions";
+
+export const metadata: Metadata = {
+  title: "Nuevo ticket — HelpDesk",
+};
 
 export default async function NewTicketPage() {
   await requireUser();
