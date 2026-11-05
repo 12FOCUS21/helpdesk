@@ -18,6 +18,11 @@ Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo
 - `npm run build`: compilación de producción
 - `npm run lint`: ESLint
 - `npm run typecheck`: TypeScript sin emitir archivos
+- `npm run db:generate`: genera el cliente de Prisma
+- `npm run db:migrate`: crea y aplica migraciones
+- `npm run db:seed`: carga los datos de prueba
+- `npm run db:studio`: abre Prisma Studio
+- `npm run db:reset`: reinicia la base de datos y la vuelve a sembrar
 - `npm test`: pruebas (se añadirá en la semana 3)
 
 ## Convenciones de código
@@ -29,6 +34,14 @@ Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo
 - Validar toda entrada del usuario con Zod.
 - No añadir comentarios salvo que aporten información que el código no exprese.
 - Mantener las funciones pequeñas y con una sola responsabilidad.
+
+## Base de datos
+
+- Usar siempre la instancia compartida de `src/lib/prisma.ts`; no instanciar `PrismaClient` en componentes ni rutas.
+- Todo cambio de modelo requiere editar `prisma/schema.prisma` y crear una migración con `npm run db:migrate`.
+- No editar migraciones ya aplicadas; crear una nueva.
+- El archivo `prisma/dev.db` y el cliente generado no se versionan.
+- Los estados y prioridades usan los enums `TicketStatus` y `TicketPriority`.
 
 ## Flujo de trabajo con IA
 
