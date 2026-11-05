@@ -28,7 +28,7 @@ export async function loginAction(
   const session = await createSession(user.id);
   await setSessionCookie(session.token, session.expiresAt);
 
-  redirect("/tickets");
+  redirect("/dashboard");
 }
 
 export async function logoutAction() {

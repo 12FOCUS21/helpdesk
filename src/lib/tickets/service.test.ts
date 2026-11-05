@@ -112,6 +112,26 @@ describe("listTickets", () => {
     expect(result[0]?.title).toBe("Error de login");
   });
 
+  it("busca también en la descripción", async () => {
+    await createTicket(
+      ticketInput({
+        title: "Problema de acceso",
+        description: "La pantalla se queda cargando.",
+      }),
+    );
+    await createTicket(
+      ticketInput({
+        title: "Otro ticket",
+        description: "No carga el panel principal.",
+      }),
+    );
+
+    const result = await listTickets({ search: "pantalla" });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.title).toBe("Problema de acceso");
+  });
+
   it("devuelve todos los tickets sin filtros", async () => {
     await createTicket(ticketInput({ title: "Ticket uno" }));
     await createTicket(ticketInput({ title: "Ticket dos" }));

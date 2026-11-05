@@ -47,7 +47,14 @@ export async function listTickets(input: unknown = {}) {
   return prisma.ticket.findMany({
     where: {
       ...(status ? { status } : {}),
-      ...(search ? { title: { contains: search } } : {}),
+      ...(search
+        ? {
+            OR: [
+              { title: { contains: search } },
+              { description: { contains: search } },
+            ],
+          }
+        : {}),
     },
     include: ticketInclude,
     orderBy: { createdAt: "desc" },

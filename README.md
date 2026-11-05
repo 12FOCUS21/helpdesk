@@ -4,7 +4,7 @@ Sistema de tickets de soporte desarrollado como proyecto de aprendizaje de ingen
 
 ## Estado
 
-Semana 5 completada: autenticación con sesiones, creación y edición de tickets, comentarios y cambios de estado.
+Semana 6 completada: panel con métricas, filtro por estado y búsqueda de tickets.
 
 ## Stack
 
@@ -71,7 +71,8 @@ El acceso requiere iniciar sesión en `/login`. Las sesiones se guardan en la ta
 | Ruta | Descripción |
 | --- | --- |
 | `/login` | Inicio de sesión |
-| `/tickets` | Lista de tickets |
+| `/dashboard` | Panel con métricas |
+| `/tickets` | Lista de tickets con filtros |
 | `/tickets/new` | Crear un ticket |
 | `/tickets/[id]` | Detalle y comentarios |
 | `/tickets/[id]/edit` | Editar un ticket |
@@ -102,6 +103,7 @@ helpdesk/
 │       └── tickets/
 │           ├── actions.ts   # Server Actions
 │           ├── constants.ts # Estados y prioridades
+│           ├── stats.ts     # Métricas del panel
 │           ├── status.ts    # Máquina de estados
 │           └── service.ts   # Lógica de negocio
 ├── AGENTS.md                # Reglas para trabajar con IA
@@ -114,7 +116,7 @@ La base de datos es un archivo SQLite en `prisma/dev.db` que no se versiona. Las
 
 ## Pruebas
 
-`npm test` usa una base de datos independiente en `prisma/test.db`, aplica las migraciones y limpia los datos antes de cada prueba. Incluye pruebas unitarias de validación y de la máquina de estados, pruebas de integración de la lógica de negocio y pruebas de autenticación y sesiones.
+`npm test` usa una base de datos independiente en `prisma/test.db`, aplica las migraciones y limpia los datos antes de cada prueba. Los archivos de prueba se ejecutan en serie porque comparten esa base SQLite. Incluye pruebas unitarias de validación y de la máquina de estados, pruebas de integración de la lógica de negocio, pruebas de autenticación y sesiones, y pruebas de las métricas.
 
 ## Documentación
 

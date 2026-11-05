@@ -8,12 +8,18 @@ export function AppHeader({ user }: { user: SessionUser }) {
       <div className="mx-auto flex min-h-16 w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
           <Link
-            href="/tickets"
+            href="/dashboard"
             className="text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-50"
           >
             HelpDesk
           </Link>
           <nav className="flex items-center gap-1 text-sm">
+            <Link
+              href="/dashboard"
+              className="rounded-md px-3 py-2 font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+            >
+              Panel
+            </Link>
             <Link
               href="/tickets"
               className="rounded-md px-3 py-2 font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
