@@ -1,3 +1,62 @@
+# Reglas del proyecto HelpDesk
+
+## Contexto
+
+Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo de ingeniería de software asistido por IA: planificar, implementar, revisar, probar y documentar.
+
+## Stack
+
+- Next.js 16 con App Router y carpeta `src/`
+- TypeScript en modo estricto
+- Tailwind CSS 4
+- Prisma + SQLite
+- Vitest para pruebas
+
+## Comandos
+
+- `npm run dev`: servidor de desarrollo
+- `npm run build`: compilación de producción
+- `npm run lint`: ESLint
+- `npm run typecheck`: TypeScript sin emitir archivos
+- `npm test`: pruebas (se añadirá en la semana 3)
+
+## Convenciones de código
+
+- Usar Server Components por defecto; añadir `"use client"` solo cuando sea necesario.
+- Componentes en PascalCase, archivos de componentes en PascalCase.
+- Funciones y variables en camelCase.
+- Rutas y carpetas en minúsculas y kebab-case.
+- Validar toda entrada del usuario con Zod.
+- No añadir comentarios salvo que aporten información que el código no exprese.
+- Mantener las funciones pequeñas y con una sola responsabilidad.
+
+## Flujo de trabajo con IA
+
+1. Describir el objetivo, el contexto y los criterios de aceptación.
+2. Pedir un plan antes de escribir código.
+3. Implementar en pasos pequeños, una funcionalidad por vez.
+4. Revisar el diff línea por línea y pedir explicación de lo que no se entienda.
+5. Verificar con `npm run lint`, `npm run typecheck` y las pruebas.
+6. Hacer un commit por tarea con un mensaje claro.
+7. Anotar en `docs/retro.md` qué funcionó y qué se corrigió.
+
+## Definición de terminado
+
+Una tarea está terminada cuando:
+
+- Cumple los criterios de aceptación.
+- Pasa lint y typecheck.
+- Tiene pruebas cuando incluye lógica de negocio.
+- El diff fue revisado y entendido.
+- La documentación relevante está actualizada.
+- Está en un commit con mensaje descriptivo.
+
+## Seguridad
+
+- Nunca commitear secretos ni archivos `.env`.
+- No inventar credenciales, URLs ni dependencias.
+- No ejecutar comandos destructivos sin confirmación.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
