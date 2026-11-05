@@ -61,8 +61,21 @@ export const ticketFilterSchema = z.object({
     .optional(),
 });
 
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .pipe(z.email("Introduce un correo electrónico válido")),
+  password: z
+    .string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .max(100, "La contraseña no puede superar los 100 caracteres"),
+});
+
 export type CreateTicketInput = z.input<typeof createTicketSchema>;
 export type UpdateTicketInput = z.input<typeof updateTicketSchema>;
 export type CreateCommentInput = z.input<typeof createCommentSchema>;
 export type ChangeTicketStatusInput = z.input<typeof changeTicketStatusSchema>;
 export type TicketFilterInput = z.input<typeof ticketFilterSchema>;
+export type LoginInput = z.input<typeof loginSchema>;

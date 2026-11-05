@@ -4,7 +4,7 @@ Sistema de tickets de soporte desarrollado como proyecto de aprendizaje de ingen
 
 ## Estado
 
-Semana 3 completada: validación con Zod, reglas de negocio y pruebas automatizadas.
+Semana 5 completada: autenticación con sesiones, creación y edición de tickets, comentarios y cambios de estado.
 
 ## Stack
 
@@ -62,6 +62,20 @@ Todas las cuentas usan la contraseña `password123`.
 | Ana Torres | `ana@helpdesk.dev` |
 | Luis Pérez | `luis@helpdesk.dev` |
 
+## Autenticación
+
+El acceso requiere iniciar sesión en `/login`. Las sesiones se guardan en la tabla `sessions` como un hash SHA-256 del token; la cookie `helpdesk_session` es `httpOnly`, `SameSite=Lax`, dura 7 días y las rutas bajo `(app)` están protegidas con `requireUser()`.
+
+## Rutas
+
+| Ruta | Descripción |
+| --- | --- |
+| `/login` | Inicio de sesión |
+| `/tickets` | Lista de tickets |
+| `/tickets/new` | Crear un ticket |
+| `/tickets/[id]` | Detalle y comentarios |
+| `/tickets/[id]/edit` | Editar un ticket |
+
 ## Estructura
 
 ```text
@@ -75,12 +89,18 @@ helpdesk/
 │   └── dev.db               # Base de datos local (no se versiona)
 ├── public/                  # Recursos estáticos
 ├── src/
-│   ├── app/                 # Rutas y layouts (App Router)
+│   ├── app/
+│   │   ├── (app)/           # Rutas protegidas
+│   │   └── (auth)/          # Inicio de sesión
+│   ├── components/          # Componentes de interfaz
 │   ├── generated/           # Cliente de Prisma generado (no se versiona)
 │   └── lib/
+│       ├── auth/            # Sesiones, cookies y guardas
 │       ├── prisma.ts        # Instancia única de Prisma Client
 │       ├── validation.ts    # Esquemas de Zod
+│       ├── format.ts        # Formato de fechas
 │       └── tickets/
+│           ├── actions.ts   # Server Actions
 │           ├── constants.ts # Estados y prioridades
 │           ├── status.ts    # Máquina de estados
 │           └── service.ts   # Lógica de negocio
@@ -94,7 +114,7 @@ La base de datos es un archivo SQLite en `prisma/dev.db` que no se versiona. Las
 
 ## Pruebas
 
-`npm test` usa una base de datos independiente en `prisma/test.db`, aplica las migraciones y limpia los datos antes de cada prueba. Incluye pruebas unitarias de validación y de la máquina de estados, además de pruebas de integración de la lógica de negocio.
+`npm test` usa una base de datos independiente en `prisma/test.db`, aplica las migraciones y limpia los datos antes de cada prueba. Incluye pruebas unitarias de validación y de la máquina de estados, pruebas de integración de la lógica de negocio y pruebas de autenticación y sesiones.
 
 ## Documentación
 

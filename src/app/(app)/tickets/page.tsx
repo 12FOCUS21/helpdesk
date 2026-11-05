@@ -3,6 +3,7 @@ import {
   PriorityBadge,
   StatusBadge,
 } from "@/components/tickets/TicketBadges";
+import { requireUser } from "@/lib/auth/current-user";
 import { formatDate } from "@/lib/format";
 import { listTickets } from "@/lib/tickets/service";
 
@@ -11,6 +12,7 @@ type TicketsPageProps = {
 };
 
 export default async function TicketsPage({ searchParams }: TicketsPageProps) {
+  await requireUser();
   const query = await searchParams;
   const tickets = await listTickets({
     status: query.status,
@@ -19,14 +21,22 @@ export default async function TicketsPage({ searchParams }: TicketsPageProps) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-          Tickets
-        </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          {tickets.length} {tickets.length === 1 ? "ticket" : "tickets"} en el
-          sistema
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
+            Tickets
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            {tickets.length} {tickets.length === 1 ? "ticket" : "tickets"} en el
+            sistema
+          </p>
+        </div>
+        <Link
+          href="/tickets/new"
+          className="inline-flex items-center justify-center rounded-md bg-zinc-900 px-3.5 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
+        >
+          Nuevo ticket
+        </Link>
       </div>
 
       {tickets.length === 0 ? (

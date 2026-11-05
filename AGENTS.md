@@ -34,6 +34,8 @@ Aplicación web de tickets de soporte. El objetivo es aprender el ciclo completo
 - Rutas y carpetas en minúsculas y kebab-case.
 - Validar toda entrada del usuario con Zod.
 - La lógica de negocio vive en `src/lib/tickets`; las rutas y componentes solo la orquestan.
+- Las Server Actions viven en `src/lib/*/actions.ts`, se marcan con `"use server"` y validan la sesión con `requireUser()`.
+- Las rutas protegidas viven bajo `src/app/(app)` y su layout comprueba la sesión con `requireUser()`.
 - No añadir comentarios salvo que aporten información que el código no exprese.
 - Mantener las funciones pequeñas y con una sola responsabilidad.
 
@@ -79,6 +81,8 @@ Una tarea está terminada cuando:
 - Nunca commitear secretos ni archivos `.env`.
 - No inventar credenciales, URLs ni dependencias.
 - No ejecutar comandos destructivos sin confirmación.
+- Guardar solo el hash del token de sesión; nunca el token en claro ni en logs.
+- Las cookies de sesión deben ser `httpOnly`, `SameSite=Lax` y `secure` en producción.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

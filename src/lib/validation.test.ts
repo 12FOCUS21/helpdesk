@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   createCommentSchema,
   createTicketSchema,
+  loginSchema,
   ticketFilterSchema,
   updateTicketSchema,
 } from "./validation";
@@ -117,6 +118,35 @@ describe("ticketFilterSchema", () => {
 
   it("rechaza un estado desconocido", () => {
     const result = ticketFilterSchema.safeParse({ status: "pendiente" });
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("loginSchema", () => {
+  it("normaliza el correo electrónico", () => {
+    const result = loginSchema.parse({
+      email: "  AGENTE@HELPDESK.DEV  ",
+      password: "password123",
+    });
+
+    expect(result.email).toBe("agente@helpdesk.dev");
+  });
+
+  it("rechaza un correo inválido", () => {
+    const result = loginSchema.safeParse({
+      email: "no-es-un-correo",
+      password: "password123",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rechaza una contraseña demasiado corta", () => {
+    const result = loginSchema.safeParse({
+      email: "agente@helpdesk.dev",
+      password: "corta",
+    });
 
     expect(result.success).toBe(false);
   });
