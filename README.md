@@ -4,7 +4,7 @@ Sistema de tickets de soporte desarrollado como proyecto de aprendizaje de ingen
 
 ## Estado
 
-Semana 7 completada: registro de usuarios, manejo de errores, página 404 y pruebas adicionales.
+MVP completo (semana 8). Versión `v1.0.0`: autenticación, CRUD de tickets, comentarios, panel de métricas, filtros, manejo de errores y pruebas automatizadas.
 
 ## Stack
 
@@ -128,9 +128,28 @@ La base de datos es un archivo SQLite en `prisma/dev.db` que no se versiona. Las
 
 `npm test` usa una base de datos independiente en `prisma/test.db`, aplica las migraciones y limpia los datos antes de cada prueba. Los archivos de prueba se ejecutan en serie porque comparten esa base SQLite. Incluye pruebas unitarias de validación y de la máquina de estados, pruebas de integración de la lógica de negocio, pruebas de autenticación, registro y sesiones, pruebas de las métricas y pruebas de la conversión de errores de Server Actions.
 
+## Despliegue
+
+La aplicación está pensada para ejecutarse en local o en un servidor con sistema de archivos persistente.
+
+Demo local de producción:
+
+```powershell
+npm run build
+npm run start
+```
+
+Notas para un despliegue público:
+
+- SQLite (`prisma/dev.db`) no es adecuado para plataformas con sistema de archivos efímero como Vercel: los datos y las sesiones se perderían entre despliegues.
+- Para producción, usa PostgreSQL y cambia el `provider` del datasource, el adapter de Prisma y `DATABASE_URL`.
+- Ejecuta las migraciones con `npx prisma migrate deploy` y define las variables de entorno del servidor.
+- Todavía no hay un despliegue público configurado; esta sección describe los pasos pendientes.
+
 ## Documentación
 
 - [Visión y alcance del MVP](docs/vision.md)
+- [Retrospectiva](docs/retro.md)
 
 ## Flujo de trabajo
 
